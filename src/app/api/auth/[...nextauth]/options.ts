@@ -2,6 +2,7 @@ import { NextAuthOptions } from 'next-auth'
 import { UpstashRedisAdapter } from '@next-auth/upstash-redis-adapter'
 import { db } from '@/lib/db'
 import GoogleProvider from 'next-auth/providers/google'
+import Github from 'next-auth/providers/github'
 
 function getGoogleCredentials() {
     const clientId = process.env.GOOGLE_CLIENT_ID
@@ -32,12 +33,15 @@ export const authOptions: NextAuthOptions = {
             clientId: getGoogleCredentials().clientId,
             clientSecret: getGoogleCredentials().clientSecret,
         }),
+        Github({
+            clientId:  process.env.GITHUB_CLIENT_ID!,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET!
+        }),
     ],
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
         async jwt({ token, user }) {
             const dbUser = (await db.get(`user:${token.id}`)) as User | null
-            console.log("hhhhhhhhhh", dbUser)
 
             if (!dbUser) {
                 if (user) {

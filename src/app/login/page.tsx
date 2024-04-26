@@ -11,7 +11,7 @@ const Login = () => {
     const LoginWithGoogle = async () => {
         setIsLoading(true)
         try {
-            await signIn('google')
+            await signIn('github')
         } catch (error) {
             toast.error("Please try again.")
         } finally {
