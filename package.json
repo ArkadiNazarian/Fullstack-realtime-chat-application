@@ -9,8 +9,6 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@next-auth/upstash-redis-adapter": "^3.0.4",
-    "@upstash/redis": "^1.30.0",
     "axios": "^1.6.8",
     "class-variance-authority": "^0.7.0",
     "formik": "^2.4.6",

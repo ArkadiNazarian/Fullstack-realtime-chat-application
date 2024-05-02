@@ -65,13 +65,6 @@
   dependencies:
     sparse-bitfield "^3.0.3"
 
-"@next-auth/upstash-redis-adapter@^3.0.4":
-  version "3.0.4"
-  resolved "https://registry.yarnpkg.com/@next-auth/upstash-redis-adapter/-/upstash-redis-adapter-3.0.4.tgz#9769b6cec783c3142689fe252a47932f61824553"
-  integrity sha512-az9hFemtnSry7YAaVvxPEwGZSbnK8xiRLX/C5bDsM1ibQWSx6aIp7QY3Kk4NSdqU6LONkXnjndKKhrUnwEmfFw==
-  dependencies:
-    uuid "^8.3.2"
-
 "@next/env@14.2.2":
   version "14.2.2"
   resolved "https://registry.yarnpkg.com/@next/env/-/env-14.2.2.tgz#6c36fe0b04a22ea78bd60a645ae77d53cd16d3ca"
@@ -212,13 +205,6 @@
   integrity sha512-lXCmTWSHJvf0TRSO58nm978b8HJ/EdsSsEKLd3ODHFjo+3VGAyyTp4v50nWvwtzBxSMQrVOK7tcuN0zGPLICMw==
   dependencies:
     "@types/webidl-conversions" "*"
-
-"@upstash/redis@^1.30.0":
-  version "1.30.0"
-  resolved "https://registry.yarnpkg.com/@upstash/redis/-/redis-1.30.0.tgz#b9b5b4025ec7a45421dbb606d1bb32e2e932119d"
-  integrity sha512-bkxl2n7qls27hONXNyItM6ccRT0NBJ8c6zl83wx+TlODpYXehgeiUJTkcTaXLp7hk+zy6Mqpzpeo3GX+wZSvBw==
-  dependencies:
-    crypto-js "^4.2.0"
 
 ansi-regex@^5.0.1:
   version "5.0.1"
@@ -389,11 +375,6 @@ cross-spawn@^7.0.0:
     path-key "^3.1.0"
     shebang-command "^2.0.0"
     which "^2.0.1"
-
-crypto-js@^4.2.0:
-  version "4.2.0"
-  resolved "https://registry.yarnpkg.com/crypto-js/-/crypto-js-4.2.0.tgz#4d931639ecdfd12ff80e8186dba6af2c2e856631"
-  integrity sha512-KALDyEYgpY+Rlob/iriUtjV6d5Eq+Y191A5g4UqLAi8CyGP9N1+FdVbkc1SxKc2r4YAYqG8JzO2KGL+AizD70Q==
 
 cssesc@^3.0.0:
   version "3.0.0"
