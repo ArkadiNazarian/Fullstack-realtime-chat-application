@@ -28,8 +28,8 @@ export const AddFriendComponent = () => {
             email: value.email
         }).then(() => {
             setShowSuccess(true)
-        }).catch(()=>{
-            toast.error("Please try again")
+        }).catch((error) => {
+            toast.error(error.response.data)
         })
     }
 

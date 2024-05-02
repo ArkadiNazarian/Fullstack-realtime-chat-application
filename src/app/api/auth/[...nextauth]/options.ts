@@ -1,8 +1,6 @@
 import { NextAuthOptions } from 'next-auth'
-import { UpstashRedisAdapter } from '@next-auth/upstash-redis-adapter'
-import { db } from '@/lib/db'
 import GoogleProvider from 'next-auth/providers/google'
-import Github from 'next-auth/providers/github'
+import Github from '@/lib/github'
 
 function getGoogleCredentials() {
     const clientId = process.env.GOOGLE_CLIENT_ID
@@ -20,7 +18,6 @@ function getGoogleCredentials() {
 }
 
 export const authOptions: NextAuthOptions = {
-    adapter: UpstashRedisAdapter(db),
     session: {
         strategy: 'jwt',
     },
@@ -34,36 +31,30 @@ export const authOptions: NextAuthOptions = {
             clientSecret: getGoogleCredentials().clientSecret,
         }),
         Github({
-            clientId:  process.env.GITHUB_CLIENT_ID!,
+            clientId: process.env.GITHUB_CLIENT_ID!,
             clientSecret: process.env.GITHUB_CLIENT_SECRET!
         }),
     ],
     secret: process.env.NEXTAUTH_SECRET,
     callbacks: {
-        async jwt({ token, user }) {
-            const dbUser = (await db.get(`user:${token.id}`)) as User | null
+        async jwt(context) {
 
-            if (!dbUser) {
-                if (user) {
-                    token.id = user!.id
-                }
+            const { token, user, account, profile, trigger, session } = context;
 
-                return token
+            
+            if (user) {
+                token.user = user;
             }
+            return token;
 
-            return {
-                id: dbUser.id,
-                name: dbUser.name,
-                email: dbUser.email,
-                picture: dbUser.image,
-            }
         },
-        async session({ session, token }) {
-            if (token) {
-                session.user.id = token.id
-                session.user.name = token.name
-                session.user.email = token.email
-                session.user.image = token.picture
+        async session(context) {
+
+            const { session, token } = context;
+            const user = token.user;
+            
+            if (session && user) {
+                session.user = user;
             }
 
             return session
