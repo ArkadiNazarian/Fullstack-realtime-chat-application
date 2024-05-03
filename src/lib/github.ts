@@ -92,6 +92,7 @@ export default function Github<P extends GithubProfile>(options: OAuthUserConfig
             },
         },
         async profile(profile) {
+
             await connectMongoDB()
             const check_user = await users.findOne({ email: profile.email })
 
@@ -107,7 +108,7 @@ export default function Github<P extends GithubProfile>(options: OAuthUserConfig
                     id: create_user._id,
                     name: create_user.name ?? profile.login,
                     email: create_user.email,
-                    image: create_user.avatar_url
+                    image: create_user.image
                 }
             }
 

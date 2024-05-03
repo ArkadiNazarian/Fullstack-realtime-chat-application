@@ -25,7 +25,7 @@ export async function POST(req: Request) {
             return NextResponse.json('You cannot add yourself as a friend.', { status: 400 })
         }
 
-        const is_friend = person_to_add.friends.find((value: any) => value.email == email)
+        const is_friend = (await users.findById(session.user.id)).friends.find((value: any) => value == person_to_add._id.toString())
 
         if (is_friend) {
             return NextResponse.json('Already added this user', { status: 400 })
