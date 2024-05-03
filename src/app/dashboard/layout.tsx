@@ -5,6 +5,8 @@ import Link from "next/link"
 import { ReactNode } from "react"
 import { authOptions } from "../api/auth/[...nextauth]/options";
 import SignOutButton from "@/components/SignoutButton";
+import { FriendRequestSidebar } from "@/components/FirendRequestSidebar";
+import { requests } from "@/model/requests";
 
 interface Layoutprops {
     children: ReactNode
@@ -28,7 +30,8 @@ const sidebarOptions: Array<SidebarOption> = [
 
 const Layout = async ({ children }: Layoutprops) => {
 
-    const session = await getServerSession(authOptions)
+    const session = await getServerSession(authOptions);
+    const unseen_requests = await requests.find({ receiver_id: session?.user.id })
 
     return (
         <div className="tw-w-full tw-flex tw-h-screen">
@@ -68,6 +71,10 @@ const Layout = async ({ children }: Layoutprops) => {
                                 }
                             </ul>
                         </li>
+
+                        <li>
+                            <FriendRequestSidebar initial_unseen_request_count={unseen_requests.length} session_id={session?.user.id} />
+                        </li>
                         <li className="tw--mx-6 tw-mt-auto tw-flex tw-items-center">
                             <div className="tw-flex tw-flex-1 tw-items-center tw-gap-x-4 tw-px-6 tw-py-3 tw-text-sm tw-font-semibold tw-leading-6 tw-text-gray-900">
                                 <div className="tw-relative tw-h-8 tw-w-8 tw-bg-gray-50">
@@ -85,7 +92,7 @@ const Layout = async ({ children }: Layoutprops) => {
                                     <span className="tw-text-xs tw-text-zinc-400" aria-hidden="true">{session?.user.email}</span>
                                 </div>
                             </div>
-                            <SignOutButton className="tw-h-full tw-aspect-square"/>
+                            <SignOutButton />
                         </li>
                     </ul>
                 </nav>
