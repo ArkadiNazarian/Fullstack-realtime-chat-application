@@ -7,6 +7,8 @@ import { authOptions } from "../api/auth/[...nextauth]/options";
 import SignOutButton from "@/components/SignoutButton";
 import { FriendRequestSidebar } from "@/components/FirendRequestSidebar";
 import { requests } from "@/model/requests";
+import { users } from "@/model/users";
+import { SidebarChatList } from "@/components/SidebarChatList";
 
 interface Layoutprops {
     children: ReactNode
@@ -32,6 +34,18 @@ const Layout = async ({ children }: Layoutprops) => {
 
     const session = await getServerSession(authOptions);
     const unseen_requests = await requests.find({ receiver_id: session?.user.id })
+    const get_friends_list = (await users.findById(session?.user.id)).friends as Array<string>
+
+    const friends = await Promise.all(
+        get_friends_list.map(async (value) => {
+            const friend = await users.findById(value)
+            return {
+                id:friend._id.toString(),
+                name:friend.name,
+                email:friend.email
+            }
+        })
+    )
 
     return (
         <div className="tw-w-full tw-flex tw-h-screen">
@@ -40,13 +54,16 @@ const Layout = async ({ children }: Layoutprops) => {
                     <Icons.Logo className="tw-h-8 tw-w-auto tw-text-indigo-600" />
                 </Link>
 
-                <div className="tw-text-xs tw-font-semibold tw-leading-6 tw-text-gray-400">
-                    Your chats
-                </div>
+                {
+                    friends.length > 0 &&
+                    <div className="tw-text-xs tw-font-semibold tw-leading-6 tw-text-gray-400">
+                        Your chats
+                    </div>
+                }
 
                 <nav className="tw-flex tw-flex-1 tw-flex-col">
                     <ul role="list" className="tw-flex tw-flex-1 tw-flex-col tw-gap-y-7">
-                        <li>chats user has</li>
+                        <li><SidebarChatList friends={friends} /></li>
                         <li>
                             <div className="tw-text-xs tw-font-semibold tw-leading-6 tw-text-gray-400">
                                 Overview
@@ -69,32 +86,32 @@ const Layout = async ({ children }: Layoutprops) => {
                                         )
                                     })
                                 }
+                                <li>
+                                    <FriendRequestSidebar initial_unseen_request_count={unseen_requests.length} session_id={session?.user.id} />
+                                </li>
                             </ul>
                         </li>
 
-                        <li>
-                            <FriendRequestSidebar initial_unseen_request_count={unseen_requests.length} session_id={session?.user.id} />
-                        </li>
-                        <li className="tw--mx-6 tw-mt-auto tw-flex tw-items-center">
-                            <div className="tw-flex tw-flex-1 tw-items-center tw-gap-x-4 tw-px-6 tw-py-3 tw-text-sm tw-font-semibold tw-leading-6 tw-text-gray-900">
-                                <div className="tw-relative tw-h-8 tw-w-8 tw-bg-gray-50">
-                                    <Image
-                                        referrerPolicy="no-referrer"
-                                        fill
-                                        className="tw-rounded-full"
-                                        alt="Your profile picture"
-                                        src={session?.user.image || ""}
-                                    />
-                                </div>
-                                <span className="tw-sr-only">Your profile</span>
-                                <div className="tw-flex tw-flex-col">
-                                    <span aria-hidden="true">{session?.user.name}</span>
-                                    <span className="tw-text-xs tw-text-zinc-400" aria-hidden="true">{session?.user.email}</span>
-                                </div>
-                            </div>
-                            <SignOutButton />
-                        </li>
                     </ul>
+                    <li className="tw--mx-6 tw-mt-auto tw-flex tw-items-center">
+                        <div className="tw-flex tw-flex-1 tw-items-center tw-gap-x-4 tw-px-6 tw-py-3 tw-text-sm tw-font-semibold tw-leading-6 tw-text-gray-900">
+                            <div className="tw-relative tw-h-8 tw-w-8 tw-bg-gray-50">
+                                <Image
+                                    referrerPolicy="no-referrer"
+                                    fill
+                                    className="tw-rounded-full"
+                                    alt="Your profile picture"
+                                    src={session?.user.image || ""}
+                                />
+                            </div>
+                            <span className="tw-sr-only">Your profile</span>
+                            <div className="tw-flex tw-flex-col">
+                                <span aria-hidden="true">{session?.user.name}</span>
+                                <span className="tw-text-xs tw-text-zinc-400" aria-hidden="true">{session?.user.email}</span>
+                            </div>
+                        </div>
+                        <SignOutButton />
+                    </li>
                 </nav>
             </div>
             {children}
