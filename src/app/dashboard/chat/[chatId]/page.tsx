@@ -75,9 +75,8 @@ const ChatRoom = async (props: ChatRoomModel) => {
             </div>
 
             <Messages
-                // chat_id={string_chat_id}
-                // chatPartner={chatPartner}
-                // sessionImg={session.user.image}
+                session_image={session?.user.image}
+                chat_parter_image={chat_partner.image}
                 session_id={session!.user.id}
                 initial_messages={chatts!}
             />
