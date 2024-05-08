@@ -6,11 +6,8 @@ import { chats } from "@/model/chats";
 
 export async function POST(req: Request) {
     try {
-
-
         const body = await req.json();
         const session = await getServerSession(authOptions)
-
         if (!session) return NextResponse.json("Unauthorized", { status: 401 })
 
         const ids = body.chat_id.split("--")

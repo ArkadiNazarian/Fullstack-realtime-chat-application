@@ -1,10 +1,11 @@
 'use client'
 
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import ReactTextareaAutosize from "react-textarea-autosize"
 import Button from "./ui/Button";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { io } from "socket.io-client";
 
 interface ChatInputModel {
     // chat_partner: {
@@ -13,7 +14,11 @@ interface ChatInputModel {
     chat_id: string;
 }
 
+var socket: any;
+socket = io("http://localhost:3001");
+
 export const ChatInput = (props: ChatInputModel) => {
+
 
     const textareaRef = useRef<HTMLTextAreaElement | null>(null);
     const [input, set_input] = useState<string>('');
@@ -28,12 +33,24 @@ export const ChatInput = (props: ChatInputModel) => {
             })
             set_input('')
             textareaRef.current?.focus()
+            socket.emit("send_msg", {
+                text: input,
+                chat_id: props.chat_id
+            })
         } catch (error) {
             toast.error('Something went wrong. Please try later')
-        } finally{
+        } finally {
             set_is_loading(false)
         }
     }
+
+    useEffect(() => {
+        socket.on("receive_msg", (data: any) => {
+            console.log(data, "DATA");
+
+        });
+    })
+
 
     return (
         <div className='tw-border-t tw-border-gray-200 tw-px-4 tw-pt-4 tw-mb-2 sm:tw-mb-0'>

@@ -3,7 +3,8 @@
 import { cn } from "@/lib/utils";
 import moment from "moment";
 import Image from "next/image";
-import { useRef, useState } from "react"
+import { useEffect, useRef, useState } from "react"
+import { io } from "socket.io-client";
 
 interface MessagesModel {
     initial_messages: Array<Message>;
@@ -12,11 +13,20 @@ interface MessagesModel {
     chat_parter_image: string;
 }
 
+var socket: any;
+socket = io("http://localhost:3001");
+
 export const Messages = (props: MessagesModel) => {
 
     const scrollDownRef = useRef<HTMLDivElement | null>(null);
 
     const [messages, set_messages] = useState<Array<Message>>(props.initial_messages);
+
+        socket.on("receive_msg", (data: any) => {
+           console.log(data)
+
+        });
+    
 
     const time_formater = (date: Date) => {
         return moment(date).format("HH:mm")
