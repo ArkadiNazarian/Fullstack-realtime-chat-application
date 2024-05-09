@@ -22,11 +22,14 @@ export const Messages = (props: MessagesModel) => {
 
     const [messages, set_messages] = useState<Array<Message>>(props.initial_messages);
 
+    useEffect(() => {
         socket.on("receive_msg", (data: any) => {
-           console.log(data)
-
+            const msg = data.result
+            set_messages([msg, ...messages])
         });
-    
+    }, [messages])
+
+
 
     const time_formater = (date: Date) => {
         return moment(date).format("HH:mm")

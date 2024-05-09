@@ -24,32 +24,25 @@ export const ChatInput = (props: ChatInputModel) => {
     const [input, set_input] = useState<string>('');
     const [is_loading, set_is_loading] = useState<boolean>(false);
 
-    const action_send_message = async () => {
+    const action_send_message = () => {
         set_is_loading(true)
-        try {
-            await axios.post('/api/message/send', {
-                text: input,
-                chat_id: props.chat_id
-            })
+        axios.post('/api/message/send', {
+            text: input,
+            chat_id: props.chat_id
+        }).then((result) => {
+            const idata = result.data
             set_input('')
             textareaRef.current?.focus()
             socket.emit("send_msg", {
-                text: input,
-                chat_id: props.chat_id
+                result: idata
             })
-        } catch (error) {
+        }).catch(() => {
             toast.error('Something went wrong. Please try later')
-        } finally {
+        }).finally(() => {
             set_is_loading(false)
-        }
+        })
+
     }
-
-    useEffect(() => {
-        socket.on("receive_msg", (data: any) => {
-            console.log(data, "DATA");
-
-        });
-    })
 
 
     return (
@@ -60,6 +53,7 @@ export const ChatInput = (props: ChatInputModel) => {
                     onKeyDown={(e) => {
                         if (e.key === "Enter" && !e.shiftKey) {
                             e.preventDefault()
+                            action_send_message()
                         }
                     }}
                     rows={1}

@@ -20,14 +20,20 @@ export async function POST(req: Request) {
 
         if (!is_friend) return NextResponse.json("Unauthorized", { status: 401 })
 
-        await chats.create({
+        const result = await chats.create({
             chat_id: body.chat_id,
             sender_id: session.user.id,
             receiver_id: friend_id,
             text: body.text
         })
 
-        return NextResponse.json("ok")
+        return NextResponse.json({
+            createdAt: result.createdAt,
+            chat_id: result.chat_id,
+            sender_id: result.sender_id,
+            receiver_id: result.receiver_id,
+            text: result.text
+        }, { status: 200 })
     } catch (error) {
         return NextResponse.json('Invalid request', { status: 400 })
     }
