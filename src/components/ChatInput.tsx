@@ -27,11 +27,10 @@ export const ChatInput = (props: ChatInputModel) => {
             text: input,
             chat_id: props.chat_id
         }).then((result) => {
-            const idata = result.data
             set_input('')
             textareaRef.current?.focus()
             socket.emit("send_msg", {
-                result: idata
+                result: result.data
             })
         }).catch(() => {
             toast.error('Something went wrong. Please try later')

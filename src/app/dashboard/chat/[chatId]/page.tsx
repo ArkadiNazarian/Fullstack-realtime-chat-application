@@ -5,7 +5,6 @@ import { chats } from "@/model/chats";
 import { users } from "@/model/users";
 import { getServerSession } from "next-auth";
 import Image from "next/image";
-import toast from "react-hot-toast";
 
 interface ChatRoomModel {
     params: {
@@ -79,6 +78,7 @@ const ChatRoom = async (props: ChatRoomModel) => {
                 chat_parter_image={chat_partner.image}
                 session_id={session!.user.id}
                 initial_messages={chatts!}
+                chat_id={string_chat_id}
             />
             <ChatInput name={chat_partner.name} chat_id={string_chat_id} />
         </div>

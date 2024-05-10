@@ -1,13 +1,14 @@
 import { getServerSession } from "next-auth"
 import { authOptions } from "../../auth/[...nextauth]/options"
-import { NextResponse } from "next/server"
+import { NextRequest, NextResponse } from "next/server"
 import { users } from "@/model/users"
 import { requests } from "@/model/requests"
 
-export async function GET(req: Request) {
+export async function GET(req: NextRequest) {
     try {
-        const { receiver_id } = await req.json()
-       
+        const searchParams = req.nextUrl.searchParams;
+        const receiver_id = searchParams.get('receiver_id');
+
         const session = await getServerSession(authOptions)
 
         if (!session) {
@@ -35,7 +36,7 @@ export async function GET(req: Request) {
         }
 
         return NextResponse.json({
-            incoming_friend_request
+            result:incoming_friend_request
         }, { status: 200 })
 
     } catch (error) {

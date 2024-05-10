@@ -19,6 +19,7 @@ export const SidebarChatList = (props: SidebarChatListModel) => {
     const pathname = usePathname()
     const session = useSession()
     const [useen_messages, set_unseen_messages] = useState([])
+    const [friends,set_friends]=useState(props.friends)
 
     useEffect(() => {
         if (pathname.includes('chat')) {
@@ -31,7 +32,7 @@ export const SidebarChatList = (props: SidebarChatListModel) => {
     return (
         <ul role="list" className="tw-max-h-[25rem] tw-overflow-y-auto tw--mx-2 tw-space-y-1">
             {
-                props.friends.sort().map((value) => {
+                friends.sort().map((value) => {
                     const unseen_messages_count = useen_messages.filter((msg: any) => {
                         return msg.sender_id === value.id
                     }).length

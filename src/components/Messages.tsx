@@ -11,6 +11,7 @@ interface MessagesModel {
     session_id: string;
     session_image: string;
     chat_parter_image: string;
+    chat_id: string;
 }
 
 const socket = io("http://localhost:3001");
@@ -28,8 +29,8 @@ export const Messages = (props: MessagesModel) => {
             set_messages([msg, ...messages])
         }
 
-        socket.on("receive_msg", handlerReceiveMsg);
-        return () => { socket.off("receive_msg", handlerReceiveMsg) };
+        socket.on(`receive_msg:${props.chat_id}`, handlerReceiveMsg);
+        return () => { socket.off(`receive_msg:${props.chat_id}`, handlerReceiveMsg) };
     }, [messages])
 
 

@@ -20,7 +20,7 @@ io.on("connection", (socket) => {
     // });
 
     socket.on("send_msg", (data) => {
-        io.emit("receive_msg", data);
+        io.emit(`receive_msg:${data.result.chat_id}`, data);
 
     });
 

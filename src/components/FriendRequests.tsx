@@ -7,7 +7,7 @@ import { useEffect, useState } from "react"
 import { io } from "socket.io-client";
 
 interface FriendRequestModel {
-    incoming_friend_requests: Array<IncomingFriendRequestModel>;
+    incoming_friend_request: Array<IncomingFriendRequestModel>;
     session_id: string;
 }
 
@@ -16,7 +16,11 @@ const socket = io("http://localhost:3001");
 export const FriendRequests = (props: FriendRequestModel) => {
 
     const router = useRouter()
-    const [friend_request, set_firend_reuqest] = useState<Array<IncomingFriendRequestModel>>(props.incoming_friend_requests);
+    const [friend_request, set_firend_reuqest] = useState<Array<IncomingFriendRequestModel>>([]);
+
+    useEffect(() => {
+        set_firend_reuqest(props.incoming_friend_request)
+    }, [props.incoming_friend_request])
 
     useEffect(() => {
 
@@ -56,10 +60,10 @@ export const FriendRequests = (props: FriendRequestModel) => {
     return (
         <>
             {
-                friend_request.length === 0 ? (
+                friend_request?.length === 0 ? (
                     <p className="tw-text-sm tw-text-zinc-500">Nothing to show here ...</p>
                 ) : (
-                    friend_request.map((value) => (
+                    friend_request?.map((value) => (
                         <div key={value.sender_id} className="tw-flex tw-gap-4 tw-items-center">
                             <UserPlus className="tw-text-black" />
                             <p className="tw-font-medium tw-text-lg">{value.sender_email}</p>
