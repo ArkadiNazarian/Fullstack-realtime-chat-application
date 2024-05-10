@@ -1,18 +1,43 @@
 "use client"
 
 import { User } from "lucide-react"
-import { useSession } from "next-auth/react";
 import Link from "next/link"
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { io } from "socket.io-client";
 
 interface IFriendRequestSidebarModel {
     initial_unseen_request_count: number;
     session_id: string;
 }
 
+const socket = io("http://localhost:3001");
+
 export const FriendRequestSidebar = (props: IFriendRequestSidebarModel) => {
 
-    const [unseen_request_count, set_unseen_request_count] = useState<number>();
+    const [unseen_request_count, set_unseen_request_count] = useState<number>(props.initial_unseen_request_count);
+
+
+    // useEffect(() => {
+    //     socket.on("receive_req", (data: any) => {
+    //         if (props.session_id === data.receiver_id) {
+    //             set_unseen_request_count((prev) => prev + 1)
+    //         }
+    //     })
+    // }, [unseen_request_count])
+
+    useEffect(() => {
+        const handleReceiveReq = (data:any) => {
+            if (props.session_id === data.receiver_id) {
+                set_unseen_request_count((prev) => prev + 1);
+            }
+        };
+
+        socket.on("receive_req", handleReceiveReq);
+
+
+        return () => { socket.off("receive_req", handleReceiveReq) };
+    }, [props.session_id]); 
+
 
 
     return (
@@ -22,9 +47,9 @@ export const FriendRequestSidebar = (props: IFriendRequestSidebarModel) => {
             </div>
             <p className="tw-truncate">Friend request</p>
             {
-                props.initial_unseen_request_count > 0 &&
+                unseen_request_count > 0 &&
                 <div className="tw-rounded-full tw-w-5 tw-h-5 tw-text-xs tw-flex tw-justify-center tw-items-center tw-text-white tw-bg-indigo-600">
-                    {props.initial_unseen_request_count}
+                    {unseen_request_count}
                 </div>
 
             }

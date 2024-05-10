@@ -4,16 +4,21 @@ import { FormikErrors, useFormik } from "formik";
 import Button from "./ui/Button"
 import * as yup from 'yup'
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { io } from "socket.io-client";
+import { useSession } from "next-auth/react";
 
 interface IAddFiendModel {
     email: string;
 }
 
+const socket = io("http://localhost:3001");
+
 export const AddFriendComponent = () => {
 
     const [showSuccess, setShowSuccess] = useState<boolean>(false);
+    const session = useSession()
 
     const initial_values: IAddFiendModel = {
         email: "",
@@ -26,8 +31,13 @@ export const AddFriendComponent = () => {
     const action_add_friend = (value: IAddFiendModel) => {
         axios.post("/api/friends/add", {
             email: value.email
-        }).then(() => {
+        }).then((result) => {
             setShowSuccess(true)
+            socket.emit("add_friend", {
+                sender_id: result.data.sender_id,
+                sender_email: session.data?.user.email,
+                receiver_id:result.data.receiver_id
+            })
         }).catch((error) => {
             toast.error(error.response.data)
         })

@@ -9,6 +9,7 @@ import { FriendRequestSidebar } from "@/components/FirendRequestSidebar";
 import { requests } from "@/model/requests";
 import { users } from "@/model/users";
 import { SidebarChatList } from "@/components/SidebarChatList";
+import { io } from "socket.io-client";
 
 interface Layoutprops {
     children: ReactNode
@@ -30,19 +31,22 @@ const sidebarOptions: Array<SidebarOption> = [
     }
 ]
 
+const socket = io("http://localhost:3001");
+
 const Layout = async ({ children }: Layoutprops) => {
 
     const session = await getServerSession(authOptions);
     const unseen_requests = await requests.find({ receiver_id: session?.user.id })
     const get_friends_list = (await users.findById(session?.user.id)).friends as Array<string>
 
+
     const friends = await Promise.all(
         get_friends_list.map(async (value) => {
             const friend = await users.findById(value)
             return {
-                id:friend._id.toString(),
-                name:friend.name,
-                email:friend.email
+                id: friend._id.toString(),
+                name: friend.name,
+                email: friend.email
             }
         })
     )

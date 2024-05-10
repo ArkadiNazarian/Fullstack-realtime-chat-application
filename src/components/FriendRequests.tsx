@@ -3,17 +3,33 @@
 import axios from "axios";
 import { Check, UserPlus, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react"
+import { useEffect, useState } from "react"
+import { io } from "socket.io-client";
 
 interface FriendRequestModel {
     incoming_friend_requests: Array<IncomingFriendRequestModel>;
     session_id: string;
 }
 
+const socket = io("http://localhost:3001");
+
 export const FriendRequests = (props: FriendRequestModel) => {
 
     const router = useRouter()
     const [friend_request, set_firend_reuqest] = useState<Array<IncomingFriendRequestModel>>(props.incoming_friend_requests);
+
+    useEffect(() => {
+
+        const handleReceiveReq = (data: any) => {
+            const request = data
+            set_firend_reuqest([request, ...friend_request])
+        }
+
+        socket.on("receive_req", handleReceiveReq)
+
+        return () => { socket.off("receive_req", handleReceiveReq) };
+    }, [])
+
 
     const action_accept_friend = (sender_id: string) => {
         axios.post('/api/requests/accept', { id: sender_id }).then(() => {
@@ -44,7 +60,7 @@ export const FriendRequests = (props: FriendRequestModel) => {
                             <button onClick={() => action_accept_friend(value.sender_id)} className="tw-w-8 tw-h-8 tw-bg-indigo-600 hover:tw-bg-indigo-700 tw-grid tw-place-items-center tw-rounded-full tw-transition hover:tw-shadow-md">
                                 <Check className="tw-font-semibold tw-text-white tw-w-3/4 tw-h-3/4" />
                             </button>
-                            <button onClick={()=>action_deny_friend(value.sender_id)} className="tw-w-8 tw-h-8 tw-bg-red-600 hover:tw-bg-red-700 tw-grid tw-place-items-center tw-rounded-full tw-transition hover:tw-shadow-md">
+                            <button onClick={() => action_deny_friend(value.sender_id)} className="tw-w-8 tw-h-8 tw-bg-red-600 hover:tw-bg-red-700 tw-grid tw-place-items-center tw-rounded-full tw-transition hover:tw-shadow-md">
                                 <X className="tw-font-semibold tw-text-white tw-w-3/4 tw-h-3/4" />
                             </button>
                         </div>

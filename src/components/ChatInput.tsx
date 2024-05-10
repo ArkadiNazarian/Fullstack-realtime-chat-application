@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from "react"
+import { useRef, useState } from "react"
 import ReactTextareaAutosize from "react-textarea-autosize"
 import Button from "./ui/Button";
 import axios from "axios";
@@ -8,14 +8,11 @@ import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 
 interface ChatInputModel {
-    // chat_partner: {
     name: string;
-    // }
     chat_id: string;
 }
 
-var socket: any;
-socket = io("http://localhost:3001");
+const socket = io("http://localhost:3001");
 
 export const ChatInput = (props: ChatInputModel) => {
 

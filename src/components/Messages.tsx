@@ -13,8 +13,7 @@ interface MessagesModel {
     chat_parter_image: string;
 }
 
-var socket: any;
-socket = io("http://localhost:3001");
+const socket = io("http://localhost:3001");
 
 export const Messages = (props: MessagesModel) => {
 
@@ -23,10 +22,14 @@ export const Messages = (props: MessagesModel) => {
     const [messages, set_messages] = useState<Array<Message>>(props.initial_messages);
 
     useEffect(() => {
-        socket.on("receive_msg", (data: any) => {
+
+        const handlerReceiveMsg = (data: any) => {
             const msg = data.result
             set_messages([msg, ...messages])
-        });
+        }
+
+        socket.on("receive_msg", handlerReceiveMsg);
+        return () => { socket.off("receive_msg", handlerReceiveMsg) };
     }, [messages])
 
 
