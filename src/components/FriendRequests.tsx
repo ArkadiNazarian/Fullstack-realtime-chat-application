@@ -25,23 +25,29 @@ export const FriendRequests = (props: FriendRequestModel) => {
             set_firend_reuqest([request, ...friend_request])
         }
 
-        socket.on("receive_req", handleReceiveReq)
+        socket.on(`receive_req:${props.session_id}`, handleReceiveReq)
 
-        return () => { socket.off("receive_req", handleReceiveReq) };
+        return () => { socket.off(`receive_req:${props.session_id}`, handleReceiveReq) };
     }, [])
 
-
     const action_accept_friend = (sender_id: string) => {
-        axios.post('/api/requests/accept', { id: sender_id }).then(() => {
+
+        axios.post('/api/requests/accept', { id: sender_id }).then((result) => {
             set_firend_reuqest((prev) => prev.filter((value) => value.sender_id !== sender_id))
+            socket.emit("update_friend_riquest_number", {
+                receiver_id: result.data.receiver_id
+            })
         }).then(() => {
             router.refresh()
         })
     }
 
     const action_deny_friend = (sender_id: string) => {
-        axios.post('/api/requests/deny', { id: sender_id }).then(() => {
+        axios.post('/api/requests/deny', { id: sender_id }).then((result: any) => {
             set_firend_reuqest((prev) => prev.filter((value) => value.sender_id !== sender_id))
+            socket.emit("update_friend_riquest_number", {
+                receiver_id: result.data.receiver_id
+            })
         }).then(() => {
             router.refresh()
         })

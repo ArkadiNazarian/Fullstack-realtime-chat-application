@@ -1,7 +1,6 @@
 'use client'
 
 import { AddFriendComponent } from "@/components/AddFriendComponent"
-import { useSession } from "next-auth/react"
 
 const AddFriend = () => {
 

@@ -16,29 +16,28 @@ export const FriendRequestSidebar = (props: IFriendRequestSidebarModel) => {
 
     const [unseen_request_count, set_unseen_request_count] = useState<number>(props.initial_unseen_request_count);
 
-
-    // useEffect(() => {
-    //     socket.on("receive_req", (data: any) => {
-    //         if (props.session_id === data.receiver_id) {
-    //             set_unseen_request_count((prev) => prev + 1)
-    //         }
-    //     })
-    // }, [unseen_request_count])
-
     useEffect(() => {
-        const handleReceiveReq = (data:any) => {
-            if (props.session_id === data.receiver_id) {
-                set_unseen_request_count((prev) => prev + 1);
-            }
+        const handleReceiveReq = (data: any) => {
+            set_unseen_request_count((prev) => prev + 1);
         };
 
-        socket.on("receive_req", handleReceiveReq);
+        socket.on(`receive_req:${props.session_id}`, handleReceiveReq);
 
 
-        return () => { socket.off("receive_req", handleReceiveReq) };
-    }, [props.session_id]); 
+        return () => { socket.off(`receive_req:${props.session_id}`, handleReceiveReq) };
+    }, []);
+
+    useEffect(() => {
+
+        const handleReceiveNum = (data: any) => {
+            set_unseen_request_count((prev) => prev - 1);
+        };
+
+        socket.on(`receive_update_friend_riquest_number:${props.session_id}`, handleReceiveNum);
 
 
+        return () => { socket.off(`receive_update_friend_riquest_number:${props.session_id}`, handleReceiveNum) };
+    }, [])
 
     return (
         <Link href="/dashboard/requests" className="tw-text-gray-700 hover:tw-text-indigo-600 hover:tw-bg-gray-50 tw-group tw-flex tw-items-center tw-gap-x-3 tw-rounded-md tw-text-sm tw-py-2 tw-leading-6 tw-font-semibold">

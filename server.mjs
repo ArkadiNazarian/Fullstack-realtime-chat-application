@@ -25,7 +25,11 @@ io.on("connection", (socket) => {
     });
 
     socket.on("add_friend", (data) => {
-        io.emit("receive_req", data)
+        io.emit(`receive_req:${data.receiver_id}`, data)
+    })
+
+    socket.on("update_friend_riquest_number", (data) => {
+        io.emit(`receive_update_friend_riquest_number:${data.receiver_id}`, data)
     })
 
     // socket.on("disconnect", () => {

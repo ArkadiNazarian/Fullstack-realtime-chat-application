@@ -4,7 +4,7 @@ import { FormikErrors, useFormik } from "formik";
 import Button from "./ui/Button"
 import * as yup from 'yup'
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import toast from "react-hot-toast";
 import { io } from "socket.io-client";
 import { useSession } from "next-auth/react";

@@ -42,7 +42,9 @@ export async function POST(req: Request) {
             receiver_id: session.user.id
         })
 
-        return NextResponse.json('Ok')
+        return NextResponse.json({
+            receiver_id: session.user.id
+        }, { status: 200 })
 
     } catch (error) {
         return NextResponse.json('Invalid request', { status: 400 })
