@@ -31,7 +31,10 @@ export async function POST(req: Request) {
             friends: get_sender_friends
         })
 
-        const get_receiver_friends = (await users.findById(session.user.id)).friends as Array<string>
+        const get_receiver_friend_details = await users.findById(session.user.id)
+        console.log(get_receiver_friend_details)
+        const get_receiver_friends = get_receiver_friend_details.friends as Array<string>
+
         get_receiver_friends.push(id)
         await users.findByIdAndUpdate(session.user.id, {
             friends: get_receiver_friends
@@ -43,7 +46,10 @@ export async function POST(req: Request) {
         })
 
         return NextResponse.json({
-            receiver_id: session.user.id
+            receiver_id: session.user.id,
+            sender_id: id,
+            name: get_receiver_friend_details.name,
+            email: get_receiver_friend_details.email
         }, { status: 200 })
 
     } catch (error) {

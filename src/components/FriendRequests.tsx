@@ -25,6 +25,7 @@ export const FriendRequests = (props: FriendRequestModel) => {
     useEffect(() => {
 
         const handleReceiveReq = (data: any) => {
+
             const request = data
             set_firend_reuqest([request, ...friend_request])
         }
@@ -40,6 +41,11 @@ export const FriendRequests = (props: FriendRequestModel) => {
             set_firend_reuqest((prev) => prev.filter((value) => value.sender_id !== sender_id))
             socket.emit("update_friend_riquest_number", {
                 receiver_id: result.data.receiver_id
+            })
+            socket.emit("update_friend_list", {
+                id: sender_id,
+                name: result.data.name,
+                email: result.data.email
             })
         }).then(() => {
             router.refresh()

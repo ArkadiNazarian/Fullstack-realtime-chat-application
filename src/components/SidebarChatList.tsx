@@ -4,14 +4,18 @@ import { chatHrefConstructor } from "@/lib/utils";
 import { useSession } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
+import { io } from "socket.io-client";
 
 interface SidebarChatListModel {
     friends: Array<{
         id: string;
         email: string;
         name: string;
-    }>
+    }>;
+    session_id: string;
 }
+
+const socket = io("http://localhost:3001");
 
 export const SidebarChatList = (props: SidebarChatListModel) => {
 
@@ -19,7 +23,7 @@ export const SidebarChatList = (props: SidebarChatListModel) => {
     const pathname = usePathname()
     const session = useSession()
     const [useen_messages, set_unseen_messages] = useState([])
-    const [friends,set_friends]=useState(props.friends)
+    const [friends,set_friends]=useState<any>([])
 
     useEffect(() => {
         if (pathname.includes('chat')) {
@@ -29,10 +33,24 @@ export const SidebarChatList = (props: SidebarChatListModel) => {
         }
     }, [pathname])
 
+    useEffect(()=>{
+        set_friends(props.friends)
+    },[props.friends])
+
+    useEffect(()=>{
+        const handler = (data: any) => {
+            set_friends([...friends, data])
+        }
+
+        socket.on(`receive_updated_friend_list:${props.session_id}`, handler)
+
+        return () => { socket.off(`receive_updated_friend_list:${props.session_id}`, handler) };
+    },[])
+
     return (
         <ul role="list" className="tw-max-h-[25rem] tw-overflow-y-auto tw--mx-2 tw-space-y-1">
             {
-                friends.sort().map((value) => {
+                friends?.map((value:any) => {
                     const unseen_messages_count = useen_messages.filter((msg: any) => {
                         return msg.sender_id === value.id
                     }).length

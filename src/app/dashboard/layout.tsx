@@ -67,7 +67,7 @@ const Layout = async ({ children }: Layoutprops) => {
 
                 <nav className="tw-flex tw-flex-1 tw-flex-col">
                     <ul role="list" className="tw-flex tw-flex-1 tw-flex-col tw-gap-y-7">
-                        <li><SidebarChatList friends={friends} /></li>
+                        <li><SidebarChatList friends={friends} session_id={session?.user.id}/></li>
                         <li>
                             <div className="tw-text-xs tw-font-semibold tw-leading-6 tw-text-gray-400">
                                 Overview

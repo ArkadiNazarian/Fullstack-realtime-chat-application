@@ -32,6 +32,10 @@ io.on("connection", (socket) => {
         io.emit(`receive_update_friend_riquest_number:${data.receiver_id}`, data)
     })
 
+    socket.on("update_friend_list", (data) => {
+        io.emit(`receive_updated_friend_list:${data.id}`, data)
+    })
+
     // socket.on("disconnect", () => {
     //     console.log("A user disconnected:", socket.id);
     // });
