@@ -9,7 +9,6 @@ import { FriendRequestSidebar } from "@/components/FirendRequestSidebar";
 import { requests } from "@/model/requests";
 import { users } from "@/model/users";
 import { SidebarChatList } from "@/components/SidebarChatList";
-import { io } from "socket.io-client";
 
 interface Layoutprops {
     children: ReactNode
@@ -30,8 +29,6 @@ const sidebarOptions: Array<SidebarOption> = [
         Icon: "UserPlus"
     }
 ]
-
-const socket = io("http://localhost:3001");
 
 const Layout = async ({ children }: Layoutprops) => {
 
@@ -67,7 +64,7 @@ const Layout = async ({ children }: Layoutprops) => {
 
                 <nav className="tw-flex tw-flex-1 tw-flex-col">
                     <ul role="list" className="tw-flex tw-flex-1 tw-flex-col tw-gap-y-7">
-                        <li><SidebarChatList friends={friends} session_id={session?.user.id}/></li>
+                        <li><SidebarChatList friends={friends} session_id={session?.user.id} /></li>
                         <li>
                             <div className="tw-text-xs tw-font-semibold tw-leading-6 tw-text-gray-400">
                                 Overview
@@ -118,7 +115,9 @@ const Layout = async ({ children }: Layoutprops) => {
                     </li>
                 </nav>
             </div>
-            {children}
+            <div className="tw-px-4 sm:tw-px-6 lg:tw-px-8 tw-w-full">
+                {children}
+            </div>
         </div>
     )
 }

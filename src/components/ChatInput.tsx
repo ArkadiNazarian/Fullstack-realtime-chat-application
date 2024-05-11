@@ -22,6 +22,7 @@ export const ChatInput = (props: ChatInputModel) => {
     const [is_loading, set_is_loading] = useState<boolean>(false);
 
     const action_send_message = () => {
+        if (!input) return
         set_is_loading(true)
         axios.post('/api/message/send', {
             text: input,
