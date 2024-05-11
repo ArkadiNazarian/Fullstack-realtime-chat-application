@@ -43,7 +43,8 @@ export const FriendRequests = (props: FriendRequestModel) => {
                 receiver_id: result.data.receiver_id
             })
             socket.emit("update_friend_list", {
-                id: sender_id,
+                id: result.data.receiver_id,
+                sender_id: sender_id,
                 name: result.data.name,
                 email: result.data.email
             })

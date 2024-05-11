@@ -33,7 +33,7 @@ io.on("connection", (socket) => {
     })
 
     socket.on("update_friend_list", (data) => {
-        io.emit(`receive_updated_friend_list:${data.id}`, data)
+        io.emit(`receive_updated_friend_list:${data.sender_id}`, data)
     })
 
     // socket.on("disconnect", () => {
