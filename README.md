@@ -18,10 +18,10 @@ This is a full stack realtime chat application that allows users to invite frien
 
 ## Installation
 
-Clone the repository
-Install dependencies: yarn install
-Start the development server: yarn dev
-Start socket server: yarn socket
+- Clone the repository
+- Install dependencies: yarn install
+- Start the development server: yarn dev
+- Start socket server: yarn socket
 
 ## Usage
 
