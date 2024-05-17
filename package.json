@@ -7,7 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "node": "node server.mjs"
+    "socket": "node server.mjs"
   },
   "dependencies": {
     "axios": "^1.6.8",
