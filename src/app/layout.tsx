@@ -5,7 +5,7 @@ import Providers from "@/components/Providers";
 import { connectMongoDB } from "@/lib/mongodb";
 import { Provider } from "./provider";
 
-const inter = Inter({ subsets: ["latin"] });
+// const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Create Next App",
@@ -21,7 +21,7 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <Provider>
-        <body className={inter.className}><Providers>{children}</Providers></body>
+        <body><Providers>{children}</Providers></body>
       </Provider>
     </html>
   );

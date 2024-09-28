@@ -1,13 +1,14 @@
 'use client'
 
 import { cn } from "@/lib/utils";
+import axios from "axios";
 import moment from "moment";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react"
 import { io } from "socket.io-client";
 
 interface MessagesModel {
-    initial_messages: Array<Message>;
+    initial_messages: Array<MessageResponse>;
     session_id: string;
     session_image: string;
     chat_parter_image: string;
@@ -20,7 +21,15 @@ export const Messages = (props: MessagesModel) => {
 
     const scrollDownRef = useRef<HTMLDivElement | null>(null);
 
-    const [messages, set_messages] = useState<Array<Message>>(props.initial_messages);
+    const [messages, set_messages] = useState<Array<MessageResponse>>(props.initial_messages);
+
+    const mm = (id: String) => {
+        axios.delete(`/api/message/delete/${id}`).then((result) => {
+            set_messages(messages.filter((value) => value._id !== id))
+        }).then(() => {
+            socket.emit("delete_message", { messageId: id, chat_id: props.chat_id })
+        })
+    }
 
     useEffect(() => {
 
@@ -33,7 +42,13 @@ export const Messages = (props: MessagesModel) => {
         return () => { socket.off(`receive_msg:${props.chat_id}`, handlerReceiveMsg) };
     }, [messages])
 
-
+    useEffect(() => {
+        const handlerReceiveDeleteMsg = (data: any) => {
+            set_messages(messages.filter((value) => value._id !== data.messageId))
+        }
+        socket.on(`receive_delete_message:${props.chat_id}`, handlerReceiveDeleteMsg);
+        return () => { socket.off(`receive_delete_message:${props.chat_id}`, handlerReceiveDeleteMsg) };
+    }, [messages])
 
     const time_formater = (date: Date) => {
         return moment(date).format("HH:mm")
@@ -48,7 +63,7 @@ export const Messages = (props: MessagesModel) => {
                     const has_next_message_from_same_user = messages[index - 1]?.sender_id === messages[index].sender_id
 
                     return (
-                        <div key={`${value.chat_id}-${value.createdAt}`}>
+                        <div key={`${value.chat_id}-${value.createdAt}`} onClick={() => mm(value._id)}>
                             <div className={cn("tw-flex tw-items-end", { "tw-justify-end": is_current_user })}>
                                 <div className={cn("tw-flex tw-flex-col tw-space-y-2 tw-text-base tw-max-w-xs tw-mx-2", { "tw-order-1 tw-items-end": is_current_user, "tw-order-2 tw-items-start": !is_current_user })}>
                                     <span

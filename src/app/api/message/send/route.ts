@@ -32,7 +32,8 @@ export async function POST(req: Request) {
             chat_id: result.chat_id,
             sender_id: result.sender_id,
             receiver_id: result.receiver_id,
-            text: result.text
+            text: result.text,
+            _id:result._id
         }, { status: 200 })
     } catch (error) {
         return NextResponse.json('Invalid request', { status: 400 })

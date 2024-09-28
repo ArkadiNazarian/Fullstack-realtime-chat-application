@@ -10,3 +10,12 @@ interface Message {
     text: string;
     createdAt: Date
 }
+
+interface MessageResponse {
+    chat_id: string;
+    sender_id: string;
+    receiver_id: string;
+    text: string;
+    createdAt: Date;
+    _id: string;
+}

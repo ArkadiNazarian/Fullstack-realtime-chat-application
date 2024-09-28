@@ -24,6 +24,10 @@ io.on("connection", (socket) => {
 
     });
 
+    socket.on('delete_message',(data)=>{
+        io.emit(`receive_delete_message:${data.chat_id}`, data);
+    })
+
     socket.on("add_friend", (data) => {
         io.emit(`receive_req:${data.receiver_id}`, data)
     })

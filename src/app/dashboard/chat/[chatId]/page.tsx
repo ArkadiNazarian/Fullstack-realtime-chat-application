@@ -42,7 +42,8 @@ const ChatRoom = async (props: ChatRoomModel) => {
             chat_id: value.chat_id,
             sender_id: value.sender_id,
             receiver_id: value.receiver_id,
-            text: value.text
+            text: value.text,
+            _id:value._id
         }
     }).reverse()
 
