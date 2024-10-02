@@ -23,7 +23,7 @@ export const Messages = (props: MessagesModel) => {
 
     const [messages, set_messages] = useState<Array<MessageResponse>>(props.initial_messages);
 
-    const mm = (id: String) => {
+    const deleteMessage = (id: String) => {
         axios.delete(`/api/message/delete/${id}`).then((result) => {
             set_messages(messages.filter((value) => value._id !== id))
         }).then(() => {
@@ -63,8 +63,11 @@ export const Messages = (props: MessagesModel) => {
                     const has_next_message_from_same_user = messages[index - 1]?.sender_id === messages[index].sender_id
 
                     return (
-                        <div key={`${value.chat_id}-${value.createdAt}`} onClick={() => mm(value._id)}>
+                        <div key={`${value.chat_id}-${value.createdAt}`}  className="tw-group ">
                             <div className={cn("tw-flex tw-items-end", { "tw-justify-end": is_current_user })}>
+                                <div className="group-hover:tw-visible hover:tw-cursor-pointer tw-invisible tw-text-red-500 tw-rounded-md" onClick={() => deleteMessage(value._id)}>
+                                    Delete
+                                </div>
                                 <div className={cn("tw-flex tw-flex-col tw-space-y-2 tw-text-base tw-max-w-xs tw-mx-2", { "tw-order-1 tw-items-end": is_current_user, "tw-order-2 tw-items-start": !is_current_user })}>
                                     <span
                                         className={cn('tw-px-4 tw-py-2 tw-rounded-lg tw-inline-block', {
